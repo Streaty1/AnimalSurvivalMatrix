@@ -1,0 +1,455 @@
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
+
+const animalData = [
+  // Apex Predators
+  { name: "Wolf", category: "Apex Predators", image: "/images/wolf/0dac8cc0bf.jpg" },
+  { name: "Shark", category: "Apex Predators", image: "/images/shark/0b37c5472f.jpg" },
+  { name: "Eagle", category: "Apex Predators", image: "/images/eagle/1d28265409.jpg" },
+  { name: "Lion", category: "Apex Predators", image: "/images/lion/4c6ec7185d.jpg" },
+  { name: "Bear", category: "Apex Predators", image: "/images/bear/2a868ca175.jpg" },
+  { name: "Tiger", category: "Apex Predators", image: "/images/tiger/0fdebd9663.jpg" },
+  { name: "Hyena", category: "Apex Predators", image: "/images/hyena/1dc8f1229c.jpg" },
+
+  // Flight Masters
+  { name: "Butterfly", category: "Flight Masters", image: "/images/butterfly/110f709dfb.jpg" },
+  { name: "Hornbill", category: "Flight Masters", image: "/images/hornbill/3d3afbd78d.jpg" },
+  { name: "Pigeon", category: "Flight Masters", image: "/images/pigeon/3f1f2fc732.jpg" },
+  { name: "Hummingbird", category: "Flight Masters", image: "/images/hummingbird/5f0a735af6.jpg" },
+  { name: "Dragonfly", category: "Flight Masters", image: "/images/dragonfly/5b56446e63.jpg" },
+  { name: "Duck", category: "Flight Masters", image: "/images/duck/4b138491ab.jpg" },
+  { name: "Sparrow", category: "Flight Masters", image: "/images/sparrow/2e508b7563.jpg" },
+
+  // Tough Defenders
+  { name: "Hedgehog", category: "Tough Defenders", image: "/images/hedgehog/5ea0fd160e.jpg" },
+  { name: "Turtle", category: "Tough Defenders", image: "/images/turtle/4e4c3e09b8.jpg" },
+  { name: "Lobster", category: "Tough Defenders", image: "/images/lobster/def6efa78d.jpg" },
+  { name: "Porcupine", category: "Tough Defenders", image: "/images/porcupine/2ec718970d.jpg" },
+  { name: "Crab", category: "Tough Defenders", image: "/images/crab/504a7a0346.jpg" },
+  { name: "Rhinoceros", category: "Tough Defenders", image: "/images/rhinoceros/9fc92e91c2.jpg" },
+
+  // Underwater Specialists
+  { name: "Oyster", category: "Underwater Specialists", image: "/images/oyster/ce0a300b13.jpg" },
+  { name: "Whale", category: "Underwater Specialists", image: "/images/whale/23a40bb03d.jpg" },
+  { name: "Starfish", category: "Underwater Specialists", image: "/images/starfish/1bc5e46260.jpg" },
+  { name: "Goldfish", category: "Underwater Specialists", image: "/images/goldfish/4a4d6859cb.jpg" },
+  { name: "Seal", category: "Underwater Specialists", image: "/images/seal/0a19f46619.jpg" },
+  { name: "Seahorse", category: "Underwater Specialists", image: "/images/seahorse/1e50b6c7eb.jpg" },
+  { name: "Jellyfish", category: "Underwater Specialists", image: "/images/jellyfish/71fb268e89.jpg" },
+
+  // Speed Demons
+  { name: "Horse", category: "Speed Demons", image: "/images/horse/3b009d95f0.jpg" },
+  { name: "Antelope", category: "Speed Demons", image: "/images/antelope/2d2dd75fb8.jpg" },
+  { name: "Hare", category: "Speed Demons", image: "/images/hare/4b3f086407.jpg" },
+  { name: "Dolphin", category: "Speed Demons", image: "/images/dolphin/0ff19a9b77.jpg" },
+  { name: "Deer", category: "Speed Demons", image: "/images/deer/06ab7583e7.jpg" },
+
+  // Tiny Survivors
+  { name: "Beetle", category: "Tiny Survivors", image: "/images/beetle/063b1929b3.jpg" },
+  { name: "Hamster", category: "Tiny Survivors", image: "/images/hamster/2e9dd3ccac.jpg" },
+  { name: "Rat", category: "Tiny Survivors", image: "/images/rat/0cc98fee57.jpg" },
+  { name: "Caterpillar", category: "Tiny Survivors", image: "/images/caterpillar/1f67ad9681.jpg" },
+  { name: "Mouse", category: "Tiny Survivors", image: "/images/mouse/1b252b4e31.jpg" },
+  { name: "Fly", category: "Tiny Survivors", image: "/images/fly/5c308a1091.jpg" },
+  { name: "Mosquito", category: "Tiny Survivors", image: "/images/mosquito/0ea2c48b44.jpg" },
+  { name: "Ladybugs", category: "Tiny Survivors", image: "/images/ladybugs/2e4e159193.jpg" },
+  { name: "Cockroach", category: "Tiny Survivors", image: "/images/cockroach/0aea14ad46.jpg" },
+
+  // Survival Geniuses
+  { name: "Parrot", category: "Survival Geniuses", image: "/images/parrot/4c26cd72e2.jpg" },
+  { name: "Chimpanzee", category: "Survival Geniuses", image: "/images/chimpanzee/59de383d63.jpg" },
+  { name: "Orangutan", category: "Survival Geniuses", image: "/images/orangutan/28c9527866.jpg" },
+  { name: "Crow", category: "Survival Geniuses", image: "/images/crow/5bbfea04ef.jpg" },
+  { name: "Elephant", category: "Survival Geniuses", image: "/images/elephant/8c2d171b9d.jpg" },
+
+  // Stealth & Shadows
+  { name: "Raccoon", category: "Stealth & Shadows", image: "/images/raccoon/1fd6478368.jpg" },
+  { name: "Owl", category: "Stealth & Shadows", image: "/images/owl/2c38bdaf1d.jpg" },
+  { name: "Squid", category: "Stealth & Shadows", image: "/images/squid/5bafc231d0.jpg" },
+  { name: "Lizard", category: "Stealth & Shadows", image: "/images/lizard/000d3a9260.jpg" },
+  { name: "Bat", category: "Stealth & Shadows", image: "/images/bat/7c5455b078.jpg" },
+  { name: "Octopus", category: "Stealth & Shadows", image: "/images/octopus/9f97e7fbf8.jpg" },
+  { name: "Moth", category: "Stealth & Shadows", image: "/images/moth/4d8b1ad40e.jpg" },
+  { name: "Leopard", category: "Stealth & Shadows", image: "/images/leopard/8f88696942.jpg" },
+
+  // Cold-Climate Survivors
+  { name: "Penguin", category: "Cold-Climate Survivors", image: "/images/penguin/1f0feb9b38.jpg" },
+  { name: "Wombat", category: "Cold-Climate Survivors", image: "/images/wombat/4a5e0af36c.jpg" },
+  { name: "Reindeer", category: "Cold-Climate Survivors", image: "/images/reindeer/9ef472add0.jpg" },
+
+  // Pack Hunters & Social Strategists
+  { name: "Coyote", category: "Pack Hunters & Social Strategists", image: "/images/coyote/46d2138807.jpg" },
+
+  // Other
+  { name: "Fox", category: "Other", image: "/images/fox/7ff48267ad.jpg" },
+  { name: "Snake", category: "Other", image: "/images/snake/27c00574e5.jpg" },
+  { name: "Woodpecker", category: "Other", image: "/images/woodpecker/2f5766ad0d.jpg" },
+  { name: "Bison", category: "Other", image: "/images/bison/1e727a98f4.jpg" },
+  { name: "Sandpiper", category: "Other", image: "/images/sandpiper/1b68092ce4.jpg" },
+  { name: "Otter", category: "Other", image: "/images/otter/5e696676de.jpg" },
+  { name: "Grasshopper", category: "Other", image: "/images/grasshopper/8a5346c76f.jpg" },
+  { name: "Dog", category: "Other", image: "/images/dog/5c641a8bde.jpg" },
+  { name: "Donkey", category: "Other", image: "/images/donkey/3a263f15d6.jpg" },
+  { name: "Hippopotamus", category: "Other", image: "/images/hippopotamus/3eb7d14c53.jpg" },
+  { name: "Bee", category: "Other", image: "/images/bee/671dd289e7.jpg" },
+  { name: "Pig", category: "Other", image: "/images/pig/28c197a6ad.jpg" },
+  { name: "Koala", category: "Other", image: "/images/koala/3c6d6206ec.jpg" },
+  { name: "Kangaroo", category: "Other", image: "/images/kangaroo/464faf73b5.jpg" },
+  { name: "Gorilla", category: "Other", image: "/images/gorilla/1c82894bb8.jpg" },
+  { name: "Possum", category: "Other", image: "/images/possum/0d16effd0b.jpg" },
+  { name: "Swan", category: "Other", image: "/images/swan/2e6bea63b2.jpg" },
+  { name: "Sheep", category: "Other", image: "/images/sheep/3d3a8b94b4.jpg" },
+  { name: "Zebra", category: "Other", image: "/images/zebra/7d35713fda.jpg" },
+  { name: "Cow", category: "Other", image: "/images/cow/066fdf665a.jpg" },
+  { name: "Ox", category: "Other", image: "/images/ox/5b84042e18.jpg" },
+  { name: "Panda", category: "Other", image: "/images/panda/2f2f20878c.jpg" },
+  { name: "Goose", category: "Other", image: "/images/goose/1d5dd02c76.jpg" },
+  { name: "Goat", category: "Other", image: "/images/goat/8a6c9e28e6.jpg" },
+  { name: "Badger", category: "Other", image: "/images/badger/0c29e0107f.jpg" },
+  { name: "Flamingo", category: "Other", image: "/images/flamingo/59fcdc60cd.jpg" },
+  { name: "Okapi", category: "Other", image: "/images/okapi/1e625c9453.jpg" },
+  { name: "Pelecaniformes", category: "Other", image: "/images/pelecaniformes/2f52115be7.jpg" },
+  { name: "Squirrel", category: "Other", image: "/images/squirrel/0c02dadd62.jpg" },
+  { name: "Cat", category: "Other", image: "/images/cat/636b432421.jpg" },
+  { name: "Turkey", category: "Other", image: "/images/turkey/00720a8130.jpg" },
+  { name: "Boar", category: "Other", image: "/images/boar/962a7fc413.jpg" }
+];
+
+const predatorPrey = {
+  Lion: ["Antelope", "Zebra", "Boar"],
+  Tiger: ["Deer", "Boar", "Monkey", "Cow"],
+  Leopard: ["Antelope", "Hare", "Monkey", "Mouse"],
+  Wolf: ["Deer", "Rabbit", "Goat", "Sheep", "Bison"],
+  Fox: ["Mouse", "Rabbit", "Duck", "Squirrel", "Pigeon"],
+  Owl: ["Mouse", "Rat", "Squirrel", "Sparrow"],
+  Eagle: ["Duck", "Rabbit", "Goldfish", "Snake", "Squirrel"],
+  Snake: ["Mouse", "Rat", "Eggs", "Sparrow"],
+  Cat: ["Mouse", "Rat", "Squirrel", "Sparrow"],
+  Dog: ["Rabbit", "Squirrel"],
+  Coyote: ["Rabbit", "Mouse", "Deer", "Duck", "Goose"],
+  Hyena: ["Antelope", "Zebra"],
+  Bear: ["Fish", "Insects", "Beetles", "Bees", "Deer"],
+  Shark: ["Seal", "Goldfish", "Squid", "Octopus"],
+  Dolphin: ["Squid", "Fish", "Octopus"],
+  Octopus: ["Crab", "Lobster", "Fish"],
+  Crab: ["Fish"],
+  Jellyfish: ["Fish"],
+  Crow: ["Insects", "Eggs", "Mouse"],
+  Chimpanzee: ["Insects"]
+};
+
+const categories = [
+  "Tiny Survivors",
+  "Survival Geniuses",
+  "Other",
+  "Apex Predators",
+  "Tough Defenders",
+  "Speed Demons",
+  "Flight Masters",
+  "Underwater Specialists",
+  "Stealth & Shadows",
+  "Pack Hunters & Social Strategists",
+  "Cold-Climate Survivors"
+];
+
+const center = { x: 1100, y: 475 };
+const radius = 300;
+
+const AnimalMindMap = () => {
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [hoveredAnimal, setHoveredAnimal] = useState(null);
+  const [hoveredAnimalPosition, setHoveredAnimalPosition] = useState(null);
+  const [relationshipLines, setRelationshipLines] = useState(null);
+
+  const getAnimalByName = (name) => animalData.find((a) => a.name === name);
+  const spacing = 60;
+
+  // Function to get category of hovered animal
+  const getHoveredCategory = () => {
+    const animal = animalData.find(a => a.name === hoveredAnimal);
+    return animal ? animal.category : null;
+  };
+
+  // Function to generate relationship lines
+  const generateRelationshipLines = (animal, position) => {
+    if (!animal || !position) return null;
+    const { ax, ay } = position;
+    
+    return (
+      <>
+        {/* Lines from predator to its prey */}
+        {predatorPrey[animal.name]?.map((prey) => {
+          const preyAnimal = getAnimalByName(prey);
+          if (!preyAnimal) return null;
+
+          const preyCategoryIndex = categories.indexOf(preyAnimal.category);
+          const preyAngle = (2 * Math.PI * preyCategoryIndex) / categories.length;
+          const preyCx = center.x + radius * Math.cos(preyAngle);
+          const preyCy = center.y + radius * Math.sin(preyAngle);
+
+          // Find the prey's position in its category
+          const preyAnimalsInCategory = animalData.filter(a => a.category === preyAnimal.category);
+          const preyIndex = preyAnimalsInCategory.findIndex(a => a.name === prey);
+          const rowIndex = Math.floor(preyIndex / 6);
+          const indexInRow = preyIndex % 6;
+          const baseArcRadius = 60 + 20 + 10 + (rowIndex * 50);
+          const angleSpacing = Math.PI / 8;
+          const animalsInThisRow = Math.min(6, preyAnimalsInCategory.length - rowIndex * 6);
+          const startAngle = preyAngle - (angleSpacing * (animalsInThisRow - 1)) / 2;
+          const preyAnimalAngle = startAngle + indexInRow * angleSpacing;
+          
+          const preyAx = preyCx + baseArcRadius * Math.cos(preyAnimalAngle);
+          const preyAy = preyCy + baseArcRadius * Math.sin(preyAnimalAngle);
+
+          // Calculate control points for a curved path
+          const dx = preyAx - ax;
+          const dy = preyAy - ay;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          // Adjust curve height based on distance
+          const curveHeight = distance * 0.3;
+          
+          // Calculate midpoint
+          const midX = (ax + preyAx) / 2;
+          const midY = (ay + preyAy) / 2;
+          
+          // Calculate perpendicular vector for control point
+          const perpX = -dy / distance;
+          const perpY = dx / distance;
+          
+          // Control point
+          const controlX = midX + perpX * curveHeight;
+          const controlY = midY + perpY * curveHeight;
+
+          return (
+            <path
+              key={`predator-${animal.name}-to-${prey}`}
+              d={`M${ax},${ay} Q${controlX},${controlY} ${preyAx},${preyAy}`}
+              stroke="#E74C3C"
+              strokeOpacity="0.7"
+              fill="none"
+              strokeWidth="2"
+            />
+          );
+        })}
+
+        {/* Lines from prey to this animal when it's their predator */}
+        {Object.entries(predatorPrey).map(([predator, preyList]) => {
+          if (!preyList.includes(animal.name)) return null;
+          const predatorAnimal = getAnimalByName(predator);
+          if (!predatorAnimal) return null;
+
+          const predatorCategoryIndex = categories.indexOf(predatorAnimal.category);
+          const predatorAngle = (2 * Math.PI * predatorCategoryIndex) / categories.length;
+          const predatorCx = center.x + radius * Math.cos(predatorAngle);
+          const predatorCy = center.y + radius * Math.sin(predatorAngle);
+
+          // Find predator's position in its category
+          const predatorAnimalsInCategory = animalData.filter(a => a.category === predatorAnimal.category);
+          const predatorIndex = predatorAnimalsInCategory.findIndex(a => a.name === predator);
+          const rowIndex = Math.floor(predatorIndex / 6);
+          const indexInRow = predatorIndex % 6;
+          const baseArcRadius = 60 + 20 + 10 + (rowIndex * 50);
+          const angleSpacing = Math.PI / 8;
+          const animalsInThisRow = Math.min(6, predatorAnimalsInCategory.length - rowIndex * 6);
+          const startAngle = predatorAngle - (angleSpacing * (animalsInThisRow - 1)) / 2;
+          const predatorAnimalAngle = startAngle + indexInRow * angleSpacing;
+          
+          const predatorAx = predatorCx + baseArcRadius * Math.cos(predatorAnimalAngle);
+          const predatorAy = predatorCy + baseArcRadius * Math.sin(predatorAnimalAngle);
+
+          // Calculate control points for a curved path
+          const dx = predatorAx - ax;
+          const dy = predatorAy - ay;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          // Adjust curve height based on distance
+          const curveHeight = distance * 0.3;
+          
+          // Calculate midpoint
+          const midX = (ax + predatorAx) / 2;
+          const midY = (ay + predatorAy) / 2;
+          
+          // Calculate perpendicular vector for control point
+          const perpX = -dy / distance;
+          const perpY = dx / distance;
+          
+          // Control point
+          const controlX = midX + perpX * curveHeight;
+          const controlY = midY + perpY * curveHeight;
+
+          return (
+            <path
+              key={`prey-${animal.name}-to-${predator}`}
+              d={`M${ax},${ay} Q${controlX},${controlY} ${predatorAx},${predatorAy}`}
+              stroke="#3C97E7"
+              strokeOpacity="0.7"
+              fill="none"
+              strokeWidth="2"
+            />
+          );
+        })}
+      </>
+    );
+  };
+
+  // Effect to update relationship lines when an animal is hovered
+  useEffect(() => {
+    const hoveredAnimalData = animalData.find(a => a.name === hoveredAnimal);
+    setRelationshipLines(generateRelationshipLines(hoveredAnimalData, hoveredAnimalPosition));
+  }, [hoveredAnimal, hoveredAnimalPosition]);
+
+  return (
+    <svg width="100%" height="1100" style={{ background: "#f0f4f8" }}>
+      {categories.map((category, i) => {
+        const angle = (2 * Math.PI * i) / categories.length;
+        const cx = center.x + radius * Math.cos(angle);
+        const cy = center.y + radius * Math.sin(angle);
+        const animals = animalData.filter((a) => a.category === category);
+        const isHoveredCategory = category === getHoveredCategory();
+
+        return (
+          <g
+            key={category}
+            onMouseEnter={() => setHoveredCategory(category)}
+            onMouseLeave={() => setHoveredCategory(null)}
+          >
+            <line x1={center.x} y1={center.y} x2={cx} y2={cy} stroke="#ccc" />
+            <circle 
+              cx={cx} 
+              cy={cy} 
+              r="60" 
+              fill={isHoveredCategory ? "#D4ECFF" : "#C9CFD5"} 
+            />
+            <text x={cx} y={cy} textAnchor="middle" dy=".3em" fontSize="14" fill="#2d3436">
+              {category}
+            </text>
+
+            {animals.map((animal, j) => {
+              const categoryRadius = 60;
+              const animalRadius = 20;
+              const maxAnimalsPerRow = 6;
+              const rowSpacing = 45;
+              
+              const rowIndex = Math.floor(j / maxAnimalsPerRow);
+              const indexInRow = j % maxAnimalsPerRow;
+              const animalsInThisRow = Math.min(maxAnimalsPerRow, animals.length - rowIndex * maxAnimalsPerRow);
+              
+              const baseArcRadius = categoryRadius + animalRadius + 10 + (rowIndex * rowSpacing);
+              const angleSpacing = Math.PI / 8;
+              const rowArcLength = angleSpacing * (animalsInThisRow - 1);
+              const startAngle = angle - rowArcLength / 2;
+              const animalAngle = startAngle + indexInRow * angleSpacing;
+
+              const ax = cx + baseArcRadius * Math.cos(animalAngle);
+              const ay = cy + baseArcRadius * Math.sin(animalAngle);
+              const isHovered = hoveredAnimal === animal.name;
+
+              return (
+                <g
+                  key={animal.name}
+                  onMouseEnter={() => {
+                    setHoveredAnimal(animal.name);
+                    setHoveredAnimalPosition({ ax, ay });
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredAnimal(null);
+                    setHoveredAnimalPosition(null);
+                  }}
+                >
+                  {isHovered ? (
+                    <motion.g
+                      initial={{ scale: 1 }}
+                      animate={{ scale: 1.2 }}
+                      style={{ transformOrigin: `${ax}px ${ay}px` }}
+                    >
+                      <rect 
+                        x={ax - 45} 
+                        y={ay - 45} 
+                        width="90" 
+                        height="90" 
+                        rx="8"
+                        fill="transparent"
+                      />
+                      <rect 
+                        x={ax - 40} 
+                        y={ay - 40} 
+                        width="80" 
+                        height="80" 
+                        rx="8"
+                        fill="white"
+                        stroke="#a1b0c0ff"
+                        strokeWidth="1.5"
+                      />
+                      <image
+                        href={animal.image}
+                        x={ax - 35}
+                        y={ay - 45}
+                        width="70"
+                        height="70"
+                      />
+                      <text 
+                        x={ax} 
+                        y={ay + 32} 
+                        textAnchor="middle" 
+                        fontSize="14" 
+                        fill="#2d3436"
+                        fontWeight="bold"
+                      >
+                        {animal.name}
+                      </text>
+                    </motion.g>
+                  ) : (
+                    <motion.g
+                      initial={{ scale: 1 }}
+                      animate={{ scale: 1 }}
+                      style={{ transformOrigin: `${ax}px ${ay}px` }}
+                    >
+                      <circle
+                        cx={ax}
+                        cy={ay}
+                        r="25"
+                        fill="transparent"
+                      />
+                      <circle
+                        cx={ax}
+                        cy={ay}
+                        r="20"
+                        fill="white"
+                        stroke="#dfe6e9"
+                        strokeWidth="2"
+                      />
+                      <image
+                        href={animal.image}
+                        x={ax - 28}
+                        y={ay - 28}
+                        width="56"
+                        height="56"
+                        clipPath="circle(18px at 28px 28px)"
+                      />
+                    </motion.g>
+                  )}
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+
+      {/* Central Circle */}
+      <circle cx={center.x} cy={center.y} r="120" fill="#34495E" />
+      <text x={center.x} y={center.y-13} textAnchor="middle" dy=".3em" fontSize="20" fill="white" fontWeight="bold" >
+        Animal Survival
+      </text>
+      <text x={center.x} y={center.y+13} textAnchor="middle" dy=".3em" fontSize="20" fill="white" fontWeight="bold" >
+        Categories
+      </text>
+
+      {/* Render relationship lines on top */}
+      {relationshipLines}
+    </svg>
+  );
+};
+
+export default AnimalMindMap;
