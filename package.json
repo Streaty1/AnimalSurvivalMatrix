@@ -1,5 +1,6 @@
 {
   "name": "circle-of-life",
+  "homepage": "https://streaty1.github.io/AnimalSurvivalMatrix/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
